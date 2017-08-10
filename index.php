@@ -42,33 +42,53 @@
 			fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));
 	</script>
-	<a href="javascript:void(0);" onclick="share_fb();">facebook</a>
-	<a href="javascript:void(0);" onclick="share_twitter();">twitter</a>
-	<a href="javascript:void(0);" onclick="share_line();">line</a>
-	<a href="javascript:void(0);" onclick="share_google();">google</a>
+	<a href="javascript:void(0);" onclick="fn_share('facebook');">facebook</a>
+	<a href="javascript:void(0);" onclick="fn_share('twitter');">twitter</a>
+	<a href="javascript:void(0);" onclick="fn_share('line');">line</a>
+	<a href="javascript:void(0);" onclick="fn_share('google');">google</a>
 	<script>
-		var url = '<?php echo $site_url; ?>';
-		function share_fb(){
-			FB.ui({
-				app_id:'1697568480545366',
-				method: 'share',
-				display: 'popup',
-				href: url,
-			}, function(response){});
-		}
-		function share_twitter(){
-			window_open("https://twitter.com/intent/tweet?text=This is Title&url="+url+"");
-		}
-		function share_line(){
-			window_open("https://lineit.line.me/share/ui?url=<?php echo $site_url; ?>");
-		}
-		function share_google(){
-			window_open("https://plus.google.com/share?url=<?php echo $site_url; ?>");
-		}
-		function window_open(url){
-			var left = ($(window).width()/2)-250;
-			var top = ($(window).height()/2)-230;
-			window.open(url, "", "toolbar=yes,scrollbars=yes,resizable=yes,top="+top+",left="+left+",width=500,height=460");
+		var $meta = {
+			url : '<?php echo $site_url; ?>',
+			title : 'This is title',
+		};
+		var $window = new Object;
+		function fn_share(social){
+			switch(social){
+				case 'facebook':
+					FB.ui({
+						app_id:'1697568480545366',
+						method: 'share',
+						display: 'popup',
+						href: $meta.url,
+					}, function(response){});
+				break;
+				case 'twitter':
+					window_open("https://twitter.com/intent/tweet?text="+$meta.title+"&url="+$meta.url+"");
+				break;
+				case 'line':
+					window_open("https://lineit.line.me/share/ui?url="+$meta.url+"");
+				break;
+				case 'google':
+					window_open("https://plus.google.com/share?url="+$meta.url+"");
+				break;
+			}
+			function window_open(url){
+				$window = {
+					width : 500,
+					height : 500,
+					left : function(){
+						return ($(window).width()/2)-(this.width/2);
+					},
+					top : function(){
+						return ($(window).height()/2)-(this.height/2);
+					},
+				};
+				window.open(url, "", "toolbar=yes,scrollbars=yes,resizable=yes,/\
+					top="+$window.top()+",\
+					left="+$window.left()+",\
+					width="+$window.width+",\
+					height="+$window.height+"");
+			}
 		}
 	</script>
 </body>
